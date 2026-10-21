@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#080808">
+  <meta name="description" content="Absensi kehadiran anggota SENKOM PK TAMAN">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <title>SENKOM PK TAMAN — Absensi</title>
+</head>
+<body>
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+  <main class="app-shell">
+    <header class="brand">
+      <img class="brand-logo" src="logo-senkom.png" alt="Logo SENKOM Mitra Polri">
+      <div><h1>SENKOM PK TAMAN</h1><p>Absensi kehadiran anggota</p></div>
+    </header>
+
+    <section id="loginView" class="glass-panel login-panel">
+      <div class="panel-top"><span class="eyebrow">AREA ANGGOTA & PENGURUS</span><span class="live-dot">● ONLINE</span></div>
+      <h2>Selamat datang</h2>
+      <p class="muted">Masuk menggunakan akun yang diberikan pengurus.</p>
+      <form id="loginForm">
+        <label for="username">Nama pengguna</label>
+        <input id="username" autocomplete="username" required placeholder="Masukkan username">
+        <label for="password">Kata sandi</label>
+        <input id="password" type="password" autocomplete="current-password" required placeholder="Masukkan kata sandi">
+        <button class="btn btn-red" type="submit">MASUK <span>→</span></button>
+        <p id="loginMessage" class="message" role="status"></p>
+      </form>
+      <p class="dev-note">Akun anggota dan pengurus memiliki halaman serta hak akses yang berbeda.</p>
+    </section>
+
+    <section id="memberView" class="hidden">
+      <div class="topline"><div><span class="eyebrow">DASHBOARD ANGGOTA</span><h2 id="memberGreeting">Halo, Anggota</h2></div><button class="btn btn-ghost" data-logout>Keluar ↗</button></div>
+      <div class="glass-panel">
+        <div class="section-head"><div><h3>Absensi hari ini</h3><p class="muted" id="todayLabel"></p></div><span class="pill">ANGGOTA</span></div>
+        <div class="location-warning"><span class="location-icon">⌖</span><div><strong>Pastikan berada di area tugas</strong><p>Silakan lakukan absensi saat berada di area PAM Jaga atau Area Amal Sholeh. Jika bertugas di lokasi pengganti, scan QR/barcode lokasi yang disediakan pengurus.</p></div></div>
+        <div class="field-grid">
+          <div><label for="attendanceStatus">Status kehadiran</label><select id="attendanceStatus"><option value="Hadir">Hadir</option><option value="Ijin">Ijin</option></select></div>
+          <div><label for="dutyArea">Area tugas</label><select id="dutyArea"><option value="PAM Jaga">PAM Jaga</option><option value="Area Amal Sholeh">Area Amal Sholeh</option><option value="Lokasi pengganti (scan QR)">Lokasi pengganti (scan QR)</option></select></div>
+        </div>
+        <div id="reasonWrap" class="hidden"><label for="reason">Keterangan / alasan ijin</label><textarea id="reason" rows="3" placeholder="Tuliskan alasan ijin dengan jelas"></textarea></div>
+        <div id="qrWrap" class="hidden">
+          <label for="qrCode">Kode lokasi QR/barcode</label>
+          <input id="qrCode" placeholder="Contoh: PAM-TAMAN-01">
+          <p class="muted small">Isi dengan kode yang tercetak pada QR/barcode lokasi. Pemindaian kamera memerlukan integrasi pustaka scanner; versi awal ini menerima kode hasil scan/ketikan.</p>
+        </div>
+        <button id="submitAttendance" class="btn btn-red" type="button">KIRIM ABSENSI <span>→</span></button>
+        <p id="attendanceMessage" class="message" role="status"></p>
+      </div>
+      <div class="glass-panel">
+        <div class="section-head"><h3>Riwayat saya</h3><button id="refreshMember" class="btn btn-ghost btn-small">Muat ulang</button></div>
+        <div id="memberHistory" class="table-wrap"><p class="muted">Belum ada data.</p></div>
+      </div>
+    </section>
+
+    <section id="adminView" class="hidden">
+      <div class="topline"><div><span class="eyebrow">PANEL PENGURUS / SEKRETARIS</span><h2>Monitoring kehadiran</h2></div><button class="btn btn-ghost" data-logout>Keluar ↗</button></div>
+      <div class="stats-grid">
+        <div class="stat glass-panel"><span>Total anggota</span><strong id="statMembers">—</strong><small>Terdaftar</small></div>
+        <div class="stat glass-panel"><span>Hadir hari ini</span><strong id="statPresent">—</strong><small>Check-in</small></div>
+        <div class="stat glass-panel"><span>Ijin hari ini</span><strong id="statExcused">—</strong><small>Dengan keterangan</small></div>
+        <div class="stat glass-panel"><span>Persentase hadir</span><strong id="statPercent">—</strong><small>Dari anggota terdaftar</small></div>
+      </div>
+      <div class="glass-panel">
+        <div class="section-head"><div><h3>Rekap terperinci</h3><p class="muted">Pilih rentang untuk memantau absensi.</p></div><button id="refreshAdmin" class="btn btn-ghost btn-small">Muat ulang</button></div>
+        <div class="field-grid">
+          <div><label for="reportFrom">Dari tanggal</label><input id="reportFrom" type="date"></div>
+          <div><label for="reportTo">Sampai tanggal</label><input id="reportTo" type="date"></div>
+        </div>
+        <div class="button-row"><button id="filterReport" class="btn btn-red">Tampilkan rekap</button><button id="exportCsv" class="btn btn-ghost">Unduh CSV</button></div>
+        <div id="adminSummary" class="summary-strip"></div>
+        <div id="adminRecords" class="table-wrap"><p class="muted">Memuat data…</p></div>
+      </div>
+      <div class="glass-panel">
+        <h3>Tambah akun anggota</h3><p class="muted">Akun baru langsung tersimpan ke Spreadsheet melalui server.</p>
+        <form id="addMemberForm" class="field-grid">
+          <div><label for="newName">Nama lengkap</label><input id="newName" required placeholder="Nama anggota"></div>
+          <div><label for="newUsername">Username</label><input id="newUsername" required pattern="[A-Za-z0-9._-]{3,30}" placeholder="contoh: budi01"></div>
+          <div><label for="newPassword">Kata sandi awal</label><input id="newPassword" type="password" minlength="8" required placeholder="Minimal 8 karakter"></div>
+          <div class="align-end"><button class="btn btn-red" type="submit">Tambah anggota +</button></div>
+        </form>
+        <p id="addMemberMessage" class="message" role="status"></p>
+        <div id="membersList" class="table-wrap"></div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>Untuk setiap amal sholehnya dan ke to'atannya dalam menjalankan perintah dan tugas kami pengurus mengucapkan</p>
+      <p class="arabic" lang="ar" dir="rtl">اَلْحَمْدُلِلّهِ جَزَاكُمُ اللَّهُ خَيْرًا</p>
+      <small>PK TAMAN <span>•</span> SENKOM PK TAMAN</small>
+    </footer>
+  </main>
+  <div class="page-mark">PK TAMAN</div>
+  <div id="toast" class="toast hidden" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
