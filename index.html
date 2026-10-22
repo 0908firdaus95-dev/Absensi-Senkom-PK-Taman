@@ -80,6 +80,8 @@
           <div><label for="newName">Nama lengkap</label><input id="newName" required placeholder="Nama anggota"></div>
           <div><label for="newUsername">Username</label><input id="newUsername" required pattern="[A-Za-z0-9._-]{3,30}" placeholder="contoh: budi01"></div>
           <div><label for="newPassword">Kata sandi awal</label><input id="newPassword" type="password" minlength="8" required placeholder="Minimal 8 karakter"></div>
+          <div><label for="newPhone">Nomor HP</label><input id="newPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Contoh: 081234567890"></div>
+          <div><label for="newAddressGroup">Alamat / kelompok</label><input id="newAddressGroup" maxlength="250" placeholder="Alamat rumah atau nama kelompok"></div>
           <div class="align-end"><button class="btn btn-red" type="submit">Tambah anggota +</button></div>
         </form>
         <p id="addMemberMessage" class="message" role="status"></p>
