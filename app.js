@@ -61,7 +61,13 @@ $('filterReport').addEventListener('click',loadAdmin);
 $('addMemberForm').addEventListener('submit',async e=>{
   e.preventDefault();message('addMemberMessage','Menyimpan anggota…');
   try{
-    await api('addMember',{name:$('newName').value.trim(),username:$('newUsername').value.trim(),password:$('newPassword').value});
+    await api('addMember',{
+      name:$('newName').value.trim(),
+      username:$('newUsername').value.trim(),
+      password:$('newPassword').value,
+      phone:$('newPhone').value.trim(),
+      addressGroup:$('newAddressGroup').value.trim()
+    });
     e.target.reset();message('addMemberMessage','Anggota berhasil ditambahkan ke database.',true);await loadAdmin();toast('Akun anggota baru dibuat.');
   }catch(err){message('addMemberMessage',err.message);}
 });
@@ -87,7 +93,13 @@ async function loadAdmin(){
     $('statPercent').textContent=(cachedMembers.length?Math.round(present/cachedMembers.length*100):0)+'%';
     $('adminSummary').innerHTML=`<span class="summary-chip">Total catatan: <b>${cachedRecords.length}</b></span><span class="summary-chip">Hadir: <b>${cachedRecords.filter(r=>r.status==='Hadir').length}</b></span><span class="summary-chip">Ijin: <b>${cachedRecords.filter(r=>r.status==='Ijin').length}</b></span>`;
     $('adminRecords').innerHTML=tableHTML(['Tanggal','Pukul','Nama','Username','Status','Area','Alasan / Kode lokasi'],cachedRecords.map(r=>[r.date,r.time,r.name,r.username,r.status,r.area,[r.reason,r.qrCode?`QR: ${r.qrCode}`:''].filter(Boolean).join(' · ')||'—']));
-    $('membersList').innerHTML=tableHTML(['Nama anggota','Username','Status'],cachedMembers.map(m=>[m.name,m.username,m.active?'Aktif':'Nonaktif']));
+    $('membersList').innerHTML=tableHTML(
+      ['Nama anggota','Username','Nomor HP','Alamat / Kelompok','Total hadir','Status'],
+      cachedMembers.map(m=>[
+        m.name,m.username,m.phone||'—',m.addressGroup||'—',
+        `${Number(m.presentCount)||0} kali`,m.active?'Aktif':'Nonaktif'
+      ])
+    );
   }catch(err){$('adminRecords').innerHTML=`<p class="muted">${escapeHTML(err.message)}</p>`;}
 }
 function tableHTML(headers,rows){
